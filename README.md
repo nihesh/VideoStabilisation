@@ -1,0 +1,2 @@
+# VideoStabilisation
+DIP Course Project
