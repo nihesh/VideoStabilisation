@@ -4,7 +4,8 @@
 import cv2
 import numpy as np
 from utils import homography_estimator, moving_average_filter
-from Args import FPS, MOVING_AVERAGE_LENGTH, MAX_EPOCHS, CROP
+from Args import FPS, MOVING_AVERAGE_LENGTH, MAX_EPOCHS, CROP 
+from homography import myhomography
 import scipy.misc
 
 class VideoStabiliser:
@@ -32,7 +33,8 @@ class VideoStabiliser:
 			if(not self.status):
 				break
 			
-			homography = homography_estimator(self.prev_frame, cur_frame)
+			homography = np.round_(myhomography(self.prev_frame, cur_frame))
+			#homography = homography_estimator(self.prev_frame,cur_frame)
 			self.motion_data.append(homography)
 
 			self.prev_frame = cur_frame
@@ -52,7 +54,7 @@ class VideoStabiliser:
 		n = self.motion_data.shape[0]
 		capture = cv2.VideoCapture(self.src)
 		fourcc = cv2.VideoWriter_fourcc(*'XVID')
-		out = cv2.VideoWriter('./output/output.avi', fourcc, FPS, (2560, 720))
+		out = cv2.VideoWriter('./output.avi', fourcc, FPS, (2560, 720))
 
 		for i in range(n):
 
@@ -61,7 +63,7 @@ class VideoStabiliser:
 			if(not status):
 				break
 
-			output = cv2.warpAffine(frame, self.motion_data[i], (self.w, self.h))
+			output = cv2.warpAffine(frame, self.motion_data[i][:-1], (self.w, self.h))
 			output = output[CROP:-CROP, CROP:-CROP]
 			output = scipy.misc.imresize(output, (self.h, self.w), interp = "bilinear", mode = None)
 
@@ -75,7 +77,7 @@ class VideoStabiliser:
 
 if(__name__ == "__main__"):
 
-	video_stabiliser = VideoStabiliser("./samples/video.mp4")
+	video_stabiliser = VideoStabiliser("./video4.mp4")
 	video_stabiliser.learn_motion()
 	video_stabiliser.smoothen()
 	video_stabiliser.saveVideo()

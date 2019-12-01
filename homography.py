@@ -13,10 +13,10 @@ import cv2
 import numpy as np
 import random
 
-threshold = 0.6
-num_epochs = 1000
 
-def homography(img1,img2):
+def myhomography(img1,img2):
+  threshold = 0.6
+  num_epochs = 1000
   sift = cv2.xfeatures2d.SIFT_create()
   kp1, desc1 = sift.detectAndCompute(img1, None)
   kp2, desc2 = sift.detectAndCompute(img2, None)
@@ -27,7 +27,7 @@ def homography(img1,img2):
     x2,y2 = kp2[match.trainIdx].pt
     corr.append([[x1,y1],[x2,y2]])
   corr = np.array(corr)
-  print(corr.shape)
+  #print(corr.shape)
   max_inliers = 0
   best_H = np.zeros((3,3))
   best_H[0][0] = best_H[1][1] = best_H[2][2] = 1
@@ -70,7 +70,7 @@ def matching(img1,img2,kp1,kp2,desc1,desc2):
   matcher = cv2.BFMatcher(cv2.NORM_L2, True)
   matches = matcher.match(desc1, desc2)
   return matches
-
+'''
 img1 = cv2.imread('image002.jpg',0) #test images
 img2 = cv2.imread('image004.jpg',0)
 H = homography(img1,img2)
@@ -79,3 +79,4 @@ w = img1.shape[0]
 h = img1.shape[1]
 target = cv2.warpPerspective(img1, H, (h, w))
 cv2.imwrite("trans.png", target)
+'''
