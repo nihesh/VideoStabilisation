@@ -53,6 +53,7 @@ class VideoStabiliser:
 
 		n = self.motion_data.shape[0]
 		capture = cv2.VideoCapture(self.src)
+		#fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
 		fourcc = cv2.VideoWriter_fourcc(*'XVID')
 		out = cv2.VideoWriter('./output.avi', fourcc, FPS, (2560, 720))
 
