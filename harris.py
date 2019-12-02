@@ -41,24 +41,25 @@ def generate_tensor(img, fx, fy, m, threshold):
 def nonmax(corners, m):
     points = []
     sup = np.zeros(corners.shape)
-    for i in range(corners.shape[0]-m):
-        for j in range(corners.shape[1]-m):
+    for i in range(0,corners.shape[0]-m,m):
+        for j in range(0,corners.shape[1]-m,m):
             if np.sum(corners[i:i+m, j:j+m]) > (m**2)/2:
                 sup[i+m//2, j+m//2] = 1
                 points.append((i+m//2, j+m//2));
     return sup, points
 
-def paint(Img, corners):
+def paint(Img, corners, d):
     I = np.array(Img)
     for i in range(I.shape[0]):
         for j in range(I.shape[1]):
             if(corners[i,j] == 1):
-                I[i,j,:] = [182, 89, 155]
+                I[i-d//2:i+d//2,j-d//2:j+d//2,:] = [182, 89, 155]
     return I
 
 # Driver function
-def harris_features(img):
+def harris_features(img, dst=None):
     # Apply gaussian filter to remove noisy artifacts
+    print(dst.shape)
     kernel_size, sigma = 5, 1
     k = gaussian(kernel_size, sigma)
     img = conv(img, k[0]/k[1])
@@ -66,15 +67,16 @@ def harris_features(img):
     img = img/255
     # Window size for structure tensor
     window_size = 3
-    threshold = [-0.75]
+    threshold = [-1]
     c = generate_tensor(img, fx(img), fy(img), window_size, threshold)
     non_max_window = 7
     c, pts = nonmax(c, non_max_window)
     orb = cv2.ORB_create()
     keypoints = [cv2.KeyPoint(i[1], i[0], 1) for i in pts]
-    kp, des = orb.compute(img, keypoints)
-    # I_t = paint(img2, c)
-    # cv2.imwrite("img_corners.png", I_t)
+    tp_img = img.astype('uint8')
+    kp, des = orb.compute(tp_img, keypoints)
+    I_t = paint(dst, c, 3)
+    cv2.imwrite("img_corners.png", I_t)
     return kp, des
 
 
@@ -84,6 +86,6 @@ if __name__ == "__main__":
     # kp = orb.detect(img1, None)
     # print(len(kp), type(kp))
     # orb.compute(img, kp)
-    # t = harris_features(img1)
+    # t = harris_features(img1, dst = img2)
     # print(t)
     pass
