@@ -132,15 +132,7 @@ class VideoStabiliser:
 
 if(__name__ == "__main__"):
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	video_stabiliser = VideoStabiliser("samples/video.mp4")
-=======
 	video_stabiliser = VideoStabiliser("./samples/" + FILE + ".mp4")
->>>>>>> ffa50d6d6e4446f0ca4864cbb29d57bf3a80437c
-=======
-	video_stabiliser = VideoStabiliser("./samples/" + FILE + ".mp4")
->>>>>>> ffa50d6d6e4446f0ca4864cbb29d57bf3a80437c
 	video_stabiliser.learn_motion()
 	video_stabiliser.smoothen()
 	video_stabiliser.saveVideo()

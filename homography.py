@@ -12,6 +12,7 @@ Original file is located at
 import cv2
 import numpy as np
 import random
+import harris
 
 
 def myhomography(img1,img2):
@@ -19,9 +20,9 @@ def myhomography(img1,img2):
   num_epochs = 1000
   img1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
   img2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
-  sift = cv2.xfeatures2d.SIFT_create()
-  kp1, desc1 = sift.detectAndCompute(img1, None)
-  kp2, desc2 = sift.detectAndCompute(img2, None)
+  # sift = cv2.xfeatures2d.SIFT_create()
+  kp1, desc1 = harris.harris_features(img1, None)
+  kp2, desc2 = harris.harris_features(img2, None)
   matches = matching(img1,img2,kp1,kp2,desc1,desc2) #to be done from scratch
   corr = []
   for match in matches:
