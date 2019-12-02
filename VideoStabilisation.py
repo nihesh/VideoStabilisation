@@ -60,8 +60,14 @@ class VideoStabiliser:
 			if(not self.status):
 				break
 			
+			# homography = np.round_(myhomography(self.prev_frame, cur_frame))
 			homography = homography_estimator(self.prev_frame,cur_frame)
 			self.motion_data.append(self.get_params(homography))
+
+			self.prev_frame = cur_frame
+			it += 1
+
+		self.motion_data = np.asarray(self.motion_data)
 
 		self.capture.release()
 		cv2.destroyAllWindows()
@@ -127,7 +133,11 @@ class VideoStabiliser:
 if(__name__ == "__main__"):
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	video_stabiliser = VideoStabiliser("samples/video.mp4")
+=======
+	video_stabiliser = VideoStabiliser("./samples/" + FILE + ".mp4")
+>>>>>>> ffa50d6d6e4446f0ca4864cbb29d57bf3a80437c
 =======
 	video_stabiliser = VideoStabiliser("./samples/" + FILE + ".mp4")
 >>>>>>> ffa50d6d6e4446f0ca4864cbb29d57bf3a80437c
