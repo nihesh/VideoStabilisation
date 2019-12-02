@@ -34,7 +34,7 @@ class VideoStabiliser:
 				break
 			
 			homography = np.round_(myhomography(self.prev_frame, cur_frame))
-			#homography = homography_estimator(self.prev_frame,cur_frame)
+			# homography = homography_estimator(self.prev_frame,cur_frame)
 			self.motion_data.append(homography)
 
 			self.prev_frame = cur_frame
@@ -53,7 +53,7 @@ class VideoStabiliser:
 
 		n = self.motion_data.shape[0]
 		capture = cv2.VideoCapture(self.src)
-		#fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
+		# fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
 		fourcc = cv2.VideoWriter_fourcc(*'XVID')
 		out = cv2.VideoWriter('./output.avi', fourcc, FPS, (2560, 720))
 
@@ -78,7 +78,7 @@ class VideoStabiliser:
 
 if(__name__ == "__main__"):
 
-	video_stabiliser = VideoStabiliser("./video4.mp4")
+	video_stabiliser = VideoStabiliser("samples/video.mp4")
 	video_stabiliser.learn_motion()
 	video_stabiliser.smoothen()
 	video_stabiliser.saveVideo()
